@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceChat AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="tailwind.config.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-200 min-h-screen flex flex-col">
+    <header class="bg-white dark:bg-gray-800 shadow-sm py-4 px-6">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center text-white">
+                    <i class="fas fa-microphone text-lg"></i>
+                </div>
+                <h1 class="text-xl font-semibold text-gray-800 dark:text-white">VoiceChat AI</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button id="darkModeToggle" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                    <i class="fas fa-moon dark:hidden"></i>
+                    <i class="fas fa-sun hidden dark:inline"></i>
+                </button>
+                <button class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 py-6">
+        <!-- Mode Toggle -->
+        <div class="flex justify-center mb-6">
+            <div class="inline-flex rounded-full bg-gray-200 dark:bg-gray-700 p-1">
+                <button id="recordModeBtn" class="px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center space-x-2 bg-white dark:bg-gray-800 shadow-sm text-primary-600 dark:text-primary-400">
+                    <i class="fas fa-microphone"></i>
+                    <span>Recording Mode</span>
+                </button>
+                <button id="streamModeBtn" class="px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center space-x-2 text-gray-600 dark:text-gray-300">
+                    <i class="fas fa-broadcast-tower"></i>
+                    <span>Stream Mode</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Chat Container -->
+        <div id="chatContainer" class="flex-1 overflow-y-auto space-y-4 mb-4">
+            <!-- Bot message example -->
+            <div class="flex justify-start">
+                <div class="max-w-xs md:max-w-md lg:max-w-lg bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm voice-bubble">
+                    <div class="flex items-center space-x-2 mb-1">
+                        <div class="w-6 h-6 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400">
+                            <i class="fas fa-robot text-xs"></i>
+                        </div>
+                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">AI Assistant</span>
+                    </div>
+                    <!-- <div class="waveform text-primary-600 dark:text-primary-400 mb-2">
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                    </div> -->
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs text-gray-500 dark:text-gray-400">Hi, I am Kuber! Ask me your Financial Doubts!</span>
+                        <!-- <button class="text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300">
+                            <i class="fas fa-play"></i>
+                        </button> -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- User message example (recording mode) -->
+            <!-- <div class="flex justify-end">
+                <div class="max-w-xs md:max-w-md lg:max-w-lg bg-primary-500 dark:bg-primary-600 rounded-2xl p-4 shadow-sm text-white voice-bubble">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-xs font-medium">You</span>
+                        <span class="text-xs opacity-80">Just now</span>
+                    </div>
+                    <div class="waveform text-white mb-2">
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                    </div>
+                    <div class="flex justify-end">
+                        <button class="opacity-80 hover:opacity-100">
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                </div>
+            </div> -->
+            
+            <!-- User message example (stream mode) -->
+            <div class="flex justify-end hidden" id="streamMessageExample">
+                <div class="max-w-xs md:max-w-md lg:max-w-lg bg-primary-500 dark:bg-primary-600 rounded-2xl p-4 shadow-sm text-white">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-xs font-medium">You (streaming)</span>
+                        <div class="flex items-center space-x-1">
+                            <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                            <span class="text-xs opacity-80">Live</span>
+                        </div>
+                    </div>
+                    <div class="waveform text-white mb-2">
+                        <div class="wave-bar" style="animation-delay: 0s; height: 30%"></div>
+                        <div class="wave-bar" style="animation-delay: 0.1s; height: 60%"></div>
+                        <div class="wave-bar" style="animation-delay: 0.2s; height: 40%"></div>
+                        <div class="wave-bar" style="animation-delay: 0.3s; height: 80%"></div>
+                        <div class="wave-bar" style="animation-delay: 0.4s; height: 60%"></div>
+                        <div class="wave-bar" style="animation-delay: 0.3s; height: 70%"></div>
+                        <div class="wave-bar" style="animation-delay: 0.2s; height: 50%"></div>
+                        <div class="wave-bar" style="animation-delay: 0.1s; height: 30%"></div>
+                        <div class="wave-bar" style="animation-delay: 0s; height: 60%"></div>
+                    </div>
+                    <div class="flex justify-end">
+                        <button class="opacity-80 hover:opacity-100">
+                            <i class="fas fa-stop"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recording Mode UI -->
+        <div id="recordingUI" class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+            <div class="flex flex-col items-center">
+                <!-- Recording state -->
+                <div id="recordingState" class="hidden flex-col items-center space-y-4 w-full">
+                    <div class="relative">
+                        <button id="stopRecordingBtn" class="w-16 h-16 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform">
+                            <i class="fas fa-stop text-xl"></i>
+                        </button>
+                        <div class="absolute inset-0 rounded-full bg-red-500 opacity-20 animate-ping-slow -z-10"></div>
+                    </div>
+                    <div class="waveform text-primary-600 dark:text-primary-400 w-full max-w-xs">
+                        <div class="wave-bar" style="height: 20%"></div>
+                        <div class="wave-bar" style="height: 50%"></div>
+                        <div class="wave-bar" style="height: 70%"></div>
+                        <div class="wave-bar" style="height: 90%"></div>
+                        <div class="wave-bar" style="height: 100%"></div>
+                        <div class="wave-bar" style="height: 80%"></div>
+                        <div class="wave-bar" style="height: 60%"></div>
+                        <div class="wave-bar" style="height: 40%"></div>
+                        <div class="wave-bar" style="height: 30%"></div>
+                    </div>
+                    <span class="text-sm text-gray-500 dark:text-gray-400">Recording... 0:05</span>
+                </div>
+                
+                <!-- Playback state -->
+                <div id="playbackState" class="hidden flex-col items-center space-y-4 w-full">
+                    <div class="relative">
+                        <button id="sendRecordingBtn" class="w-16 h-16 rounded-full bg-green-500 text-white flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform">
+                            <i class="fas fa-paper-plane text-xl"></i>
+                        </button>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                        <button class="w-12 h-12 rounded-full bg-primary-500 text-white flex items-center justify-center shadow-md">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <span class="text-sm text-gray-500 dark:text-gray-400">0:12</span>
+                </div>
+                
+                <!-- Ready state -->
+                <div id="readyState" class="flex flex-col items-center space-y-4">
+                    <button id="startRecordingBtn" class="w-20 h-20 rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 text-white flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform">
+                        <i class="fas fa-microphone text-2xl"></i>
+                    </button>
+                    <span class="text-sm text-gray-500 dark:text-gray-400">Tap to record your message</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Stream Mode UI -->
+        <div id="streamUI" class="hidden bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+            <div class="flex flex-col items-center space-y-4">
+                <div class="relative">
+                    <button id="startStreamBtn" class="w-20 h-20 rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 text-white flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform">
+                        <i class="fas fa-broadcast-tower text-2xl"></i>
+                    </button>
+                </div>
+                
+                <div id="streamControls" class="hidden w-full flex-col items-center space-y-4">
+                    <div class="waveform text-primary-600 dark:text-primary-400 w-full max-w-xs">
+                        <div class="wave-bar" style="height: 30%"></div>
+                        <div class="wave-bar" style="height: 60%"></div>
+                        <div class="wave-bar" style="height: 40%"></div>
+                        <div class="wave-bar" style="height: 80%"></div>
+                        <div class="wave-bar" style="height: 60%"></div>
+                        <div class="wave-bar" style="height: 70%"></div>
+                        <div class="wave-bar" style="height: 50%"></div>
+                        <div class="wave-bar" style="height: 30%"></div>
+                        <div class="wave-bar" style="height: 60%"></div>
+                    </div>
+                    
+                    <button id="stopStreamBtn" class="px-6 py-2 rounded-full bg-red-500 text-white font-medium flex items-center space-x-2 shadow-md">
+                        <i class="fas fa-stop"></i>
+                        <span>End Stream</span>
+                    </button>
+                    
+                    <div class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+                        <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                        <span>Streaming live to AI</span>
+                    </div>
+                </div>
+                
+                <span id="streamReadyText" class="text-sm text-gray-500 dark:text-gray-400">Hold to start streaming your voice</span>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

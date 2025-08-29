@@ -1,0 +1,180 @@
+# Kuber AI Voice — Machine Test PRD (Interview / Machine Task)
+
+**Purpose:**
+A concise, practical PRD for a machine test assignment. The goal is to produce a working Python FastAPI backend (minimal, readable, and extendible) that demonstrates the candidate can build a low-latency voice conversational pipeline with both batch and realtime modes. The emphasis is on correctness, simplicity, and measurable latency/throughput rather than production hardening.
+
+---
+
+## 1. Scope & Goals
+
+**Must-have features (required):**
+
+1. **Mode A — Turn-based Voice Q\&A (HTTP):**
+
+   * Endpoint: `POST /v1/voice/query` accepts an audio file and returns transcript, text answer, and playable audio (inline base64 or URL).
+   * Uses local Whisper (small or medium) or HuggingFace ASR for STT.
+   * Uses a local LLM (LM Studio or small HF model) for text answer.
+   * Uses a TTS provider (Coqui or HF TTS) to synthesize audio.
+2. **Mode B — Realtime (WebSocket) prototype:**
+
+   * Simple WebSocket server that accepts audio chunks and responds with streamed partial transcripts and a streamed audio reply (can be simulated by chunking a pre-synthesized audio file to validate client flow).
+3. **Pluggable provider interfaces:** Simple adapter interfaces for STT, LLM, and TTS. Implementation for at least one provider per interface.
+4. **Function Call for Gold Nudge:** LLM should support a simple function-call-like mechanism. When the response triggers a "suggest\_gold\_investment" intent (keyword or small classifier), append a short nudge sentence.
+5. **Latency measurement:** Return timings in Mode A response: stt\_ms, llm\_ms, tts\_ms, total\_ms.
+6. **Easy config:** `config.yaml` or `.env` to select providers.
+
+**Nice-to-have (bonus):**
+
+* Simple caching for repeated queries.
+* A basic client script to demo both modes (sample audio files included).
+* Unit tests for core orchestrator flows.
+
+**Out-of-scope:** heavy infra, production observability, complex security.
+
+---
+
+## 2. Tech Stack & Constraints
+
+* **Language:** Python 3.11+
+* **Web Framework:** FastAPI
+* **Async Server:** Uvicorn with async endpoints
+* **Local Models:** LM Studio (OpenAI-compatible local server) or HuggingFace `transformers` (small models), Whisper (open-source) or `whisperx` for STT
+* **TTS:** Coqui TTS or HuggingFace TTS with small model
+* **Audio Tools:** ffmpeg (via `ffmpeg-python` or `pydub`) for normalization
+* **Testing:** pytest, pytest-asyncio
+
+**Key constraints:**
+
+* Keep memory and CPU reasonable for a laptop developer machine. Prefer small model sizes (e.g., tiny/mini/quantized models).
+* Provide clear instructions (README) to run locally with Docker or venv.
+
+---
+
+## 3. Minimal Architecture
+
+* **FastAPI app** (single repo) with two major modules: `orchestrator` and `realtime`.
+* **Adapters** directory with simple provider classes: `WhisperSTT`, `HFLLM`, `CoquiTTS` (or stubs if not available).
+* **Media util** for audio normalization and chunking.
+* **Config loader** to pick adapters at startup.
+
+Flow (Mode A):
+
+1. Normalize uploaded audio → STT → LLM → nudge check → TTS → return JSON with timings + base64 audio.
+
+Flow (Mode B prototype):
+
+* WS receives `input.audio` chunks → writes to temp buffer → on `input.commit` the server runs STT (or uses interim STT) and returns partial transcript messages; after final text, synthesize audio and stream output chunks.
+
+---
+
+## 4. API Contracts
+
+### `POST /v1/voice/query`
+
+**Request (multipart):** `audio` (file), `lang` (optional), `voice` (optional), `session_id` (optional)
+
+**Response (JSON):**
+
+* `request_id`, `transcript`, `llm_text`, `audio_b64` (base64) or `audio_url`, `timings` {stt\_ms, llm\_ms, tts\_ms, total\_ms}
+
+### WebSocket `/v1/realtime/ws`
+
+**Handshake:** client sends session config JSON.
+**Messages:** small JSON envelopes with `type` field: `input.audio`, `input.commit`, server sends `transcript.partial`, `transcript.final`, `output.audio_chunk`.
+
+---
+
+## 5. Adapter Interfaces (simple)
+
+* **STTAdapter**:
+
+  * `async def transcribe(audio_bytes: bytes) -> (text, confidence)`
+  * `async def stream_transcribe(chunks: AsyncIterator[bytes]) -> AsyncIterator[str]` (optional)
+* **LLMAdapter**:
+
+  * `async def generate(prompt: str, functions: Optional[List[dict]]=None) -> LLMResult` (support returning a `function_call` dict when intent matches)
+  * Keep prompt template simple: system+user
+* **TTSAdapter**:
+
+  * `async def synthesize(text: str) -> bytes` (wav or opus)
+  * `async def stream_synthesize(text: str) -> AsyncIterator[bytes]` (optional)
+
+Provide a `Registry` that maps logical names in `config.yaml` to adapter classes.
+
+---
+
+## 6. Nudge Implementation (simple)
+
+* Use a lightweight rule: if LLM output contains keywords `gold`, `digital gold`, `sovereign gold`, or user's question includes `gold` or `invest`, flag for nudge.
+* Append a one-line nudge: "Also, you may consider exploring digital gold on Simplify. Want a quick summary?"
+* Add a session-level cooldown (1 nudge per 2 interactions). Implement via in-memory dict keyed by session\_id.
+
+---
+
+## 7. Latency & Throughput Targets (for test)
+
+* **Mode A (on laptop)**: total end-to-end ≤ 3s for short queries (audio ≤ 10s) when using small models.
+* **Mode B prototype**: time-to-first-transcript partial ≤ 800ms after first chunk; time-to-first-audio playback ≤ 1.5s after commit.
+* **Throughput:** the server should be able to handle concurrent 4–8 Mode A requests on a dev machine (depending on model sizes).
+
+Measure and report timings in the README after running simple benchmarks.
+
+---
+
+## 8. Testing & Evaluation (for interview)
+
+**Automated tests (required):**
+
+* Unit tests for orchestrator logic: confirm STT->LLM->TTS flow using mocked adapters.
+* A small integration test that runs with small local models or light-weight mocks to validate end-to-end.
+
+**Manual tests (candidate must run):**
+
+* Provide sample audio files and a `demo_client.py` script that exercises Mode A and Mode B.
+* Provide a `run_bench.py` script that hits `/v1/voice/query` with N requests and records P50/P95 latencies.
+
+**Evaluation rubric:**
+
+* Core functionality: 40% (end-to-end Mode A)
+* Realtime prototype: 20% (WS handshake + streaming behavior)
+* Code quality & structure: 20% (modularity, interfaces, README)
+* Latency & benchmarks: 10% (benchmarks provided and explained)
+* Tests & docs: 10% (unit tests + run instructions)
+
+---
+
+## 9. Deliverables (what candidate should submit)
+
+1. Source repo with clear README containing:
+
+   * setup steps, dependencies, how to run in dev (venv/docker)
+   * example requests and expected outputs
+   * benchmark instructions and results
+2. Working FastAPI server implementing Mode A and Mode B (prototype)
+3. `config.yaml` showing provider selection
+4. `demo_client.py` and `run_bench.py` scripts
+5. Unit tests and at least one integration script
+6. Short notes (1‑2 paragraphs) describing tradeoffs, future improvements, and where latency could be reduced
+
+---
+
+## 11. Hints for Candidates
+
+* Prefer small/quantized models for local runs (faster and feasible on laptop).
+* Keep adapters simple and readable; use dependency injection via config.
+* For the realtime prototype, it’s acceptable to synthesize the response after `input.commit` and stream the audio chunks to demonstrate the wiring.
+* Emphasize measuring and reporting latencies.
+
+---
+
+## 12. Acceptance Criteria (for interviewer)
+
+1. The project runs locally with minimal instructions.
+2. `/v1/voice/query` returns transcript, answer text, and playable audio (base64) for the sample audio files.
+3. WebSocket endpoint completes a simple interactive flow (client sends chunks → commit → server sends transcript + streams audio).
+4. Code is modular with adapter interfaces and a simple config to switch providers.
+5. Benchmarks exist and are reasonable for local setup; candidate explains bottlenecks and improvement plan.
+
+---
+
+*End of PRD — Machine Test for Kuber AI Voice (Interview).*

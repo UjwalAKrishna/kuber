@@ -1,0 +1,32 @@
+providers:
+  stt: "lit_stt"  # lit_stt, hf_asr
+  llm: "gemini"   # gemini only
+  tts: "lit_tts"  # lit_tts, hf_tts
+
+lit_stt:
+  api_url: "http://localhost:8001/predict" 
+  # api_url: "http://kuber-custom-models:8001/predict" #for docker
+
+hf_asr:
+  api_url: "https://router.huggingface.co/hf-inference/models/openai/whisper-large-v3"
+
+gemini:
+  model_name: "gemini-2.0-flash"
+  max_tokens: 2000
+
+lit_tts:
+  api_url: "http://localhost:8002/predict" 
+  # api_url: "http://kuber-custom-models:8002/predict" #for docker
+
+hf_tts:
+  api_url: "https://router.huggingface.co/fal-ai/fal-ai/kokoro/american-english"
+
+server:
+  host: "0.0.0.0"
+  port: 8000
+  log_level: "info"
+
+nudge:
+  keywords: ["gold", "digital gold", "sovereign gold", "invest", "investment"]
+  message: "Also, you may consider exploring digital gold on Simplify. Want a quick summary?"
+  cooldown_interactions: 2

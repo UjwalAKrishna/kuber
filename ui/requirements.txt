@@ -1,0 +1,13 @@
+# No external dependencies required
+# This server uses only Python standard library modules:
+# - http.server
+# - pathlib
+# - argparse
+# - webbrowser
+# - os
+# - sys
+
+# If you want to add more features, you might consider:
+# flask
+# fastapi
+# uvicorn

@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+python-multipart
+websockets
+pydantic
+pydantic-settings
+pyyaml
+python-dotenv
+requests
+aiohttp
+numpy
+pydub
+ffmpeg-python
+pytest
+pytest-asyncio
+httpx

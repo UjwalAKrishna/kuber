@@ -1,0 +1,8 @@
+openai-whisper
+soundfile
+uvicorn
+fastapi
+numpy
+soundfile
+torch
+kokoro
