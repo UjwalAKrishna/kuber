@@ -35,9 +35,7 @@ Kuber AI Voice is a multi-service voice conversational AI platform that processe
 ## 📸 Demo & Screenshots
 
 ### **Live Demo Video**
-Watch the complete voice interaction flow in action:
-
-https://github.com/user-attachments/assets/demo.mp4
+[Watch the complete voice interaction flow in action:](screenshots/demo.mp4)
 
 ### **Application Interface**
 ![Kuber AI Voice Interface](screenshots/Screenshot%202025-08-29%20062011.png)
