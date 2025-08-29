@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+  # Custom Models Service
+  custom-models:
+    build: .
+    container_name: kuber-custom-models
+    ports:
+      - "8001:8001"
+    environment:
+      - PYTHONPATH=/app
+    working_dir: /app/custom_models
+    command: ["python", "main.py", "--host", "0.0.0.0", "--port", "8001"]
+    volumes:
+      - ./custom_models:/app/custom_models
+      - ./custom_models/requirements.txt:/app/custom_models/requirements.txt
+    networks:
+      - kuber-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+  # Main App Service
+  app:
+    build: .
+    container_name: kuber-app
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONPATH=/app
+    env_file:
+      - ./app/.env
+    working_dir: /app
+    command: ["python", "run_server.py", "--app-only", "--host", "0.0.0.0", "--port", "8000"]
+    volumes:
+      - ./app:/app/app
+      - ./app/config.yaml:/app/config.yaml
+      - ./app/.env:/app/.env
+    depends_on:
+      custom-models:
+        condition: service_healthy
+    networks:
+      - kuber-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # UI Service
+  ui:
+    build: .
+    container_name: kuber-ui
+    ports:
+      - "3000:3000"
+    environment:
+      - PYTHONPATH=/app
+    working_dir: /app/ui
+    command: ["python", "main.py", "--host", "0.0.0.0", "--port", "3000"]
+    volumes:
+      - ./ui:/app/ui
+    networks:
+      - kuber-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  kuber-network:
+    driver: bridge
+
+volumes:
+  app-data:
+  models-data:
+  ui-data:

@@ -1,0 +1,41 @@
+# Unified Requirements for Kuber AI Voice
+# Combines dependencies from app/, custom_models/, and ui/ services
+
+# Core FastAPI dependencies (app service)
+fastapi
+uvicorn
+python-multipart
+websockets
+pydantic
+pydantic-settings
+pyyaml
+python-dotenv
+
+# API communication
+requests
+aiohttp
+
+# Audio processing
+numpy
+pydub
+ffmpeg-python
+
+# Testing
+pytest
+pytest-asyncio
+httpx
+
+# Custom Models Service dependencies
+openai-whisper
+torch
+uvicorn
+fastapi
+numpy
+soundfile
+kokoro
+
+# UI Service dependencies
+# (No additional dependencies - uses Python standard library)
+
+# Additional common dependencies
+pathlib2
