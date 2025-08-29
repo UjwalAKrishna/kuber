@@ -198,6 +198,8 @@ providers:
   tts: "lit_tts"    # Local Kokoro TTS service
 ```
 
+> **⚠️ Important Note**: If using custom models (`lit_stt` or `lit_tts`), ensure the API URLs in `config.yaml` are correctly configured. The file contains both Docker and localhost URLs - simply uncomment the appropriate ones for your deployment method.
+
 3. **Deploy Services**:
 ```bash
 # Start all services
@@ -247,6 +249,8 @@ pip install -r requirements.txt
 cp app/.env.example app/.env
 # Edit app/.env with your API keys
 ```
+
+> **⚠️ Important Note**: If using custom models (`lit_stt` or `lit_tts`), ensure the API URLs in `app/config.yaml` are correctly configured. The file contains both Docker and localhost URLs - simply uncomment the appropriate ones for your deployment method.
 
 4. **Run All Services**:
 ```bash

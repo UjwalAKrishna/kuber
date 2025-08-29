@@ -4,8 +4,8 @@ providers:
   tts: "lit_tts"  # lit_tts, hf_tts
 
 lit_stt:
-  api_url: "http://localhost:8001/predict" 
-  # api_url: "http://kuber-custom-models:8001/predict" #for docker
+  # api_url: "http://localhost:8001/predict" 
+  api_url: "http://kuber-custom-models:8001/predict" #for docker
 
 hf_asr:
   api_url: "https://router.huggingface.co/hf-inference/models/openai/whisper-large-v3"
@@ -15,8 +15,8 @@ gemini:
   max_tokens: 2000
 
 lit_tts:
-  api_url: "http://localhost:8002/predict" 
-  # api_url: "http://kuber-custom-models:8002/predict" #for docker
+  # api_url: "http://localhost:8002/predict" 
+  api_url: "http://kuber-custom-models:8002/predict" #for docker
 
 hf_tts:
   api_url: "https://router.huggingface.co/fal-ai/fal-ai/kokoro/american-english"
