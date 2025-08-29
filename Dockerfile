@@ -26,6 +26,7 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu 
 RUN pip install --no-cache-dir  --verbose -r requirements.txt
+RUN pip install --no-cache-dir  https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
 
 # Copy the entire application
 COPY . .

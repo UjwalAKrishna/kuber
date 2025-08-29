@@ -32,6 +32,26 @@ Kuber AI Voice is a multi-service voice conversational AI platform that processe
 - **Extensible Architecture**: Plugin-based adapter system for easy provider switching
 - **Performance Monitoring**: Detailed latency tracking and caching
 
+## 📸 Demo & Screenshots
+
+### **Live Demo Video**
+Watch the complete voice interaction flow in action:
+
+https://github.com/user-attachments/assets/demo.mp4
+
+### **Application Interface**
+![Kuber AI Voice Interface](screenshots/Screenshot%202025-08-29%20062011.png)
+
+*The modern web interface featuring voice recording, real-time streaming, and intelligent conversation management with dark/light mode support.*
+
+**Interface Features:**
+- 🎙️ **Voice Recording**: One-click audio capture with visual feedback
+- 🌊 **Real-time Streaming**: Live conversation mode with WebSocket integration
+- 🎨 **Modern UI**: Clean, responsive design with dark/light theme toggle
+- 💬 **Chat Interface**: WhatsApp-style conversation bubbles with audio playback
+- 📊 **Visual Feedback**: Waveform animations and recording indicators
+- 💰 **Smart Nudging**: Contextual investment suggestions with rich UI cards
+
 ## 🏗️ Architecture
 
 ### System Components
