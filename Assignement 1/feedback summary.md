@@ -1,38 +1,19 @@
-# Simplify Money – User Feedback 
+---
+## App User Feedback Summary
 
-## 1. Onboarding & Signup
-- Smooth and easy process (mobile + OTP).
-- Some users found **too many popups** during signup.
+### What Users Did Not Like / Suggestions for Improvement
 
-## 2. Design & Navigation
-- Mixed reviews:
-  - Some found it **clean and simple**.
-  - Others said it felt **crowded/cluttered**.
-- Widgets felt **too small**.
-- Homepage felt **overloaded** with info.
-- Suggested improvements:
-  - More **minimalist design**.
-  - Allow **customization of widgets** and dashboard.
+* **Performance Issues:** A user mentioned that the app sometimes felt a bit slow when loading certain pages.
+* **Lack of Customization:** One user suggested adding more customization options for the user interface.
+* **Investment Withdrawal Limitations:** A user wanted the option to withdraw their investments at any time.
+* **AI Feature Enhancements:** While the AI was liked, a user suggested improving it with more **real-time personalization** and a wider variety of use cases.
 
-## 3. Useful Features
-- AI-powered assistant/suggestions were **praised**.
-- **Quiz & learning section** considered engaging and useful.
-- Portfolio tracking and financial insights seen as **helpful**.
 
-## 4. Issues & Bugs
-- No **major bugs** reported.
-- A few complaints about **slow loading times**.
+### What Users Liked
 
-## 5. Kuber AI Feedback
-- Responses were **accurate** but felt **slow**.
-- Lacked **personalization** and **deeper insights**.
-- Users wanted:
-  - Expanded **use cases**.
-  - Faster **real-time interaction**.
-  - More **context-aware answers**.
+* **Easy Onboarding:** Users found the sign-up process simple and quick, with no confusion. The option to sign up using either a mobile number or email was appreciated.
+* **Intuitive Design and Navigation:** The app's design was described as clean, user-friendly, and intuitive. Users felt everything was accessible on a single page, making it easy to use.
+* **AI-Powered Features:** The **AI-powered suggestions/assistant** was highlighted as a very useful feature that saved time and provided relevant information.
+* **Gold Investment Feature:** The **gold investment feature** was particularly useful for one user.
 
-## 6. Suggestions for Improvement
-- Focus on **speed and performance optimization**.
-- Introduce **personalized recommendations**.
-- Give more **control over dashboard layout**.
-- Improve **UI simplicity** (less clutter, more space).
+---
